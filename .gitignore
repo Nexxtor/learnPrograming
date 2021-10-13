@@ -1,3 +1,8 @@
+# Ignorar archivos sin extension
+*
+!*/
+!*.*
+
 # Prerequisites
 *.d
 
@@ -67,3 +72,4 @@ dkms.conf
 .history
 .ionide
 */main
+
