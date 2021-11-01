@@ -17,13 +17,14 @@ struct board {
     struct size dimensions;
     char borderColor[COLOR_STRING_SIZE];
     char contentColor[COLOR_STRING_SIZE]; 
-    char *content[];
+    char **content;
 };
 
 // Prototipos, declaración de funciones
 void showParameters(int, const char *[]);
 struct size getBoardSize(int, const char *[]);
 void initBoard(struct board *);
+void freeBoard(struct board *);
 void displayBoard(struct board *);
 
 int main(int argc, const char *argv[]) {
@@ -36,6 +37,7 @@ int main(int argc, const char *argv[]) {
            boardMemory.dimensions.n, boardMemory.dimensions.m);
     initBoard(&boardMemory);
     displayBoard(&boardMemory);
+    freeBoard(&boardMemory);
     return 0;
 }
 
@@ -93,7 +95,33 @@ void initBoard(struct board *board) {
     int cRows = board->dimensions.n;
     int cColumns = board->dimensions.m;
     printf("Llenando el tablero %d x%d", cRows, cColumns);
-    // Tarea 1: Investigar que es la  Memoria dinamica -> malloc
+    
+    // Reservando espacio de memoria para las filas
+    board->content = (char **) malloc(sizeof(char *) * cRows);
+    if (board->content != NULL) {
+        for(int i = 0; i < cRows; i++) {
+            (board->content)[i] = (char *) malloc(sizeof(char) * cColumns );
+            if ((board->content)[i] == NULL) {
+                printf("No se puede reservar memoria para el tablero");
+                exit(1);
+            }
+            for(int j = 0; j< cColumns; j++) {
+                board->content[i][j] = 'A';
+            }
+        }
+    } else {
+        printf("No se puede reservar memoria para el tablero");
+        exit(1);
+    }
+
+}
+
+void freeBoard(struct board *board) {
+    int cRows = board->dimensions.n;
+    for(int i = 0 ;i < cRows; i++ ) {
+        free((board->content)[i]);
+    }
+    free(board->content);
 }
 
 /**
@@ -110,7 +138,7 @@ void displayBoard(struct board *board) {
     for (int i = 0; i < board->dimensions.n - 1; i++) {
         // content
         for (int j = 0; j < board->dimensions.m; j++) {
-            printf("│%s %s %s",board->contentColor, "♠", board->borderColor);
+            printf("│%s %c %s",board->contentColor, board->content[i][j], board->borderColor);
         }
         // divider
         printf("│\n├");
@@ -121,7 +149,7 @@ void displayBoard(struct board *board) {
     }
     // last line content
     for (int j = 0; j < board->dimensions.m; j++) {
-        printf("│%s %s %s",board->contentColor, "♠", board->borderColor);
+        printf("│%s %c %s",board->contentColor, board->content[board->dimensions.n -1][j], board->borderColor);
     }
     // Bottom decorator
     printf("│\n└");
