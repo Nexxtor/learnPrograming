@@ -6,6 +6,7 @@
 // Constantes
 #define DEFAULT_ROWS 5
 #define DEFAULT_COLUMNS 5
+#define COLOR_STRING_SIZE 12
 
 struct size {
     int n;
@@ -14,20 +15,23 @@ struct size {
 
 struct board {
     struct size dimensions;
-    char *content[]; // Letra + \0
-    // char **content
+    char borderColor[COLOR_STRING_SIZE];
+    char contentColor[COLOR_STRING_SIZE]; 
+    char *content[];
 };
 
 // Prototipos, declaración de funciones
 void showParameters(int, const char *[]);
 struct size getBoardSize(int, const char *[]);
-void initBoard(struct board*);
-void displayBoard(struct board*);
+void initBoard(struct board *);
+void displayBoard(struct board *);
 
 int main(int argc, const char *argv[]) {
     showParameters(argc, argv);
     struct board boardMemory;
     boardMemory.dimensions = getBoardSize(argc, argv);
+    strcpy(boardMemory.borderColor, "\033[0;34m");
+    strcpy(boardMemory.contentColor, "\033[1;31m");
     printf("Iniciando juego de memoria con tablero de dimensiones de %d x %d\n",
            boardMemory.dimensions.n, boardMemory.dimensions.m);
     initBoard(&boardMemory);
@@ -44,11 +48,15 @@ int main(int argc, const char *argv[]) {
  * #1   valor
  **/
 void showParameters(int argc, const char *argv[]) {
-    printf("Parametros\n");
+    printf("|============================================|\n");
+    printf("|%17sArgumentos%17s|\n", "", "");
+    printf("|============================================|\n");
+    printf("|  #                      Valor              |\n");
     for (int i = 0; i < argc; i++) {
-        printf("#%d\t%s\n", i, argv[i]);
+        printf("|[%.2d] [%*.*s]|\n", i, 37, 37, argv[i]);
     }
-    printf("Fin\n");
+
+    printf("|============================================|\n\n");
 }
 
 /**
@@ -58,8 +66,7 @@ void showParameters(int argc, const char *argv[]) {
  *
  **/
 struct size getBoardSize(int argc, const char *argv[]) {
-    struct size board = {DEFAULT_ROWS,
-                           DEFAULT_COLUMNS};  // Tamaño por defecto
+    struct size board = {DEFAULT_ROWS, DEFAULT_COLUMNS};  // Tamaño por defecto
     if (argc >= 3) {
         int n = atoi(argv[1]);
         int m = atoi(argv[2]);
@@ -79,10 +86,10 @@ struct size getBoardSize(int argc, const char *argv[]) {
 
 /**
  * Llenar el contendio del tablero con parajes
- * posicionadas de forma aleatoria segun las dimensiones 
+ * posicionadas de forma aleatoria segun las dimensiones
  * del tablero
  **/
-void initBoard(struct board* board) {
+void initBoard(struct board *board) {
     int cRows = board->dimensions.n;
     int cColumns = board->dimensions.m;
     printf("Llenando el tablero %d x%d", cRows, cColumns);
@@ -93,12 +100,33 @@ void initBoard(struct board* board) {
  * Muesta el contendio en consola del tablero de dado
  **/
 void displayBoard(struct board *board) {
-    printf("\n\n");
-    for (int i = 0 ; i < board->dimensions.n ; i ++) {
-        for( int j = 0 ; j < board->dimensions.m; j ++) {
-            printf("| %c ",'A');
-        }
-        printf("|\n");
+    // Print top decoration table
+    printf("\n\n%s┌", board->borderColor);
+    for (int j = 0; j < board->dimensions.m - 1; j++) {
+        printf("───┬");
     }
-    printf("\n\n");
+    printf("───┐\n");
+    // Print n-1 content table
+    for (int i = 0; i < board->dimensions.n - 1; i++) {
+        // content
+        for (int j = 0; j < board->dimensions.m; j++) {
+            printf("│%s %s %s",board->contentColor, "♠", board->borderColor);
+        }
+        // divider
+        printf("│\n├");
+        for (int j = 0; j < board->dimensions.m - 1; j++) {
+            printf("───┼");
+        }
+        printf("───┤\n");
+    }
+    // last line content
+    for (int j = 0; j < board->dimensions.m; j++) {
+        printf("│%s %s %s",board->contentColor, "♠", board->borderColor);
+    }
+    // Bottom decorator
+    printf("│\n└");
+     for (int j = 0; j < board->dimensions.m - 1; j++) {
+        printf("───┴");
+    }
+    printf("───┘\033[0m\n\n");
 }
