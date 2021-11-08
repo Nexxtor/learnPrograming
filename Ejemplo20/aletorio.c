@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int main(int argc, char const *argv[]) {
     // pseudo-aletorios
@@ -14,7 +15,7 @@ int main(int argc, char const *argv[]) {
 
     int n = 6, m = 4;
     int cantParejas = (n * m) / 2;
-    char pareajas[cantParejas];
+    char parejas[cantParejas];
 
     char matriz[n][m];
 
@@ -25,8 +26,8 @@ int main(int argc, char const *argv[]) {
     }
 
     for (int i = 0; i < cantParejas; i++) {
-        pareajas[i] = 'A' + rand() % 25;
-      //  printf("%c\n", pareajas[i]);
+        parejas[i] = 'A' + rand() % 25;
+      //  printf("%c\n", parejas[i]);
     }
 
     int i = 0;  // EL avanze en la parejas
@@ -41,10 +42,14 @@ int main(int argc, char const *argv[]) {
         while (matriz[nPos2][mPos2] != '\0') {
             nPos2 = rand() % n, mPos2 = rand() % m;
         }
-        printf("Insertando %c en las posiciones (%d, %d) (%d,%d)\n",pareajas[i], nPos1, mPos1, nPos2,mPos2);
 
-        matriz[nPos1][mPos1] = pareajas[i];
-        matriz[nPos2][mPos2] = pareajas[i];
+        if (nPos1 == nPos2 && mPos1 == mPos2) {
+            continue;
+        }
+        printf("Insertando %c en las posiciones (%d, %d) (%d,%d)\n",parejas[i], nPos1, mPos1, nPos2,mPos2);
+
+        matriz[nPos1][mPos1] = parejas[i];
+        matriz[nPos2][mPos2] = parejas[i];
         i++;
     }
 
