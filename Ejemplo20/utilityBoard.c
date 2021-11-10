@@ -54,7 +54,7 @@ void initBoard(struct board *board) {
             // Ubicando las opciones en el tablero
             for (int j = 0; j < nColumns; j++) {
                 board->content[i][j].card = '\0';
-                board->content[i][j].status = SHOW;
+                board->content[i][j].status = HIDDEN;
             }
         }
     } else {
