@@ -1,7 +1,7 @@
 #include <stdbool.h>
 
-#define DEFAULT_ROWS 5
-#define DEFAULT_COLUMNS 5
+#define DEFAULT_ROWS 4
+#define DEFAULT_COLUMNS 4
 #define COLOR_STRING_SIZE 12
 
 enum showStatus { HIDDEN, SHOW, MATCH };

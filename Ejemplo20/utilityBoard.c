@@ -91,10 +91,11 @@ void fillBoard(struct board *board) {
         if (xPos1 == xPos2 && yPos1 == yPos2) {
             continue;
         }
-        // printf("Llenando posion %d %d y %d %d %c\n", xPos1,yPos1, xPos2,
-        // yPos2, options[i]);
         board->content[xPos2][yPos2].card = options[i];
         board->content[xPos1][yPos1].card = options[i];
+        // printf("Llenando posion %d %d y %d %d %c %c %c\n", xPos1,yPos1,
+        // xPos2, yPos2, options[i],  board->content[xPos1][yPos1].card ,
+        // board->content[xPos2][yPos2].card);
         i++;
     }
 }
@@ -156,6 +157,7 @@ void displayCell(char *borderColor, char *contentColor, struct cell cell) {
     char *hiddenSymbol = "♠";  // Se muestra cuan la carta esta oculta
     char content[2];
     content[0] = cell.card;
+    // printf("%c", cell.card);
     content[1] = '\0';        // Contenido de la carte en formato cadena
     char *matchString = " ";  // Se muesta cuando se ha encontrado la pareja
 
